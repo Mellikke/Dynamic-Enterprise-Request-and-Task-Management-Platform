@@ -1,0 +1,271 @@
+﻿@{
+    ViewData["Title"] = "Giriş";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sisteme Giriş</title>
+  <style>
+    :root {
+      --lacivert: #0b1f4d;
+      --lacivert-acik: #1e3a8a;
+      --beyaz: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --error: #dc2626;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, var(--beyaz) 0%, #c7d2e8 35%, var(--lacivert-acik) 75%, var(--lacivert) 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .kart {
+      background: var(--beyaz);
+      width: 100%;
+      max-width: 460px;
+      border-radius: 16px;
+      box-shadow: 0 15px 45px rgba(11, 31, 77, 0.25);
+      padding: 36px 32px;
+    }
+
+    .baslik { text-align: center; margin-bottom: 28px; }
+    .baslik h1 { font-size: 22px; margin-bottom: 6px; color: var(--lacivert); }
+    .baslik p { color: var(--muted); font-size: 14px; }
+
+    /* --- Rol seçimi --- */
+    .soru { font-weight: 600; font-size: 15px; margin-bottom: 12px; color: var(--lacivert); }
+
+    .roller {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .rol {
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 8px;
+      text-align: center;
+      cursor: pointer;
+      background: var(--beyaz);
+      transition: all 0.15s ease;
+      font: inherit;
+      color: inherit;
+    }
+    .rol:hover { border-color: #a5b4d4; transform: translateY(-2px); }
+    .rol .ad { font-weight: 600; font-size: 15px; }
+    .rol .aciklama { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+    .rol.secili {
+      border-color: var(--lacivert);
+      background: var(--lacivert);
+      color: var(--beyaz);
+    }
+    .rol.secili .aciklama { color: #c7d2e8; }
+
+    /* --- Form --- */
+    .form { display: none; }
+    .form.goster { display: block; animation: belir 0.25s ease; }
+
+    @@keyframes belir {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .alan { margin-bottom: 16px; }
+    .alan label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+    .alan input {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.15s;
+    }
+    .alan input:focus {
+      outline: none;
+      border-color: var(--lacivert-acik);
+      box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.15);
+    }
+
+    .satir {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 13px; margin-bottom: 20px;
+    }
+    .satir label { display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--muted); }
+    .satir a { color: var(--lacivert-acik); text-decoration: none; }
+    .satir a:hover { text-decoration: underline; }
+
+    .giris-btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: var(--lacivert);
+      color: var(--beyaz);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .giris-btn:hover { background: var(--lacivert-acik); }
+    .giris-btn:disabled { opacity: 0.7; cursor: wait; }
+
+    .hata {
+      color: var(--error);
+      font-size: 13px;
+      margin-bottom: 12px;
+      display: none;
+    }
+    .hata.goster { display: block; }
+
+    .bilgi {
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      padding: 12px;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+    }
+
+    .alt { text-align: center; margin-top: 24px; font-size: 12px; color: var(--muted); }
+
+    @@media (max-width: 420px) {
+      .kart { padding: 28px 18px; }
+      .rol .aciklama { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="kart">
+    <div class="baslik">
+      <h1>Sisteme Hoş Geldiniz</h1>
+      <p>Devam etmek için giriş yapın</p>
+    </div>
+
+    <p class="soru">Kim olarak giriş yapıyorsunuz?</p>
+
+    <div class="roller">
+      <button type="button" class="rol" data-rol="admin">
+        <div class="ad">Admin</div>
+        <div class="aciklama">Sistem yönetimi</div>
+      </button>
+      <button type="button" class="rol" data-rol="yonetici">
+        <div class="ad">Yönetici</div>
+        <div class="aciklama">Ekip ve onaylar</div>
+      </button>
+      <button type="button" class="rol" data-rol="kullanici">
+        <div class="ad">Kullanıcı</div>
+        <div class="aciklama">Talep ve görevler</div>
+      </button>
+    </div>
+
+    <p class="bilgi" id="bilgi">Lütfen yukarıdan rolünüzü seçin.</p>
+
+    <form class="form" id="girisFormu" novalidate>
+      <div class="alan">
+        <label for="eposta">E-posta veya kullanıcı adı</label>
+        <input type="text" id="eposta" placeholder="ornek@sirket.com" autocomplete="username">
+      </div>
+
+      <div class="alan">
+        <label for="sifre">Şifre</label>
+        <input type="password" id="sifre" placeholder="••••••••" autocomplete="current-password">
+      </div>
+
+      <div class="satir">
+        <label><input type="checkbox" id="hatirla"> Beni hatırla</label>
+        <a href="#">Şifremi unuttum</a>
+      </div>
+
+      <p class="hata" id="hata"></p>
+
+      <button type="submit" class="giris-btn" id="girisBtn">Giriş Yap</button>
+    </form>
+
+    <p class="alt">© 2026 Tüm hakları saklıdır.</p>
+  </div>
+
+  <script>
+    // Her rolün görünen adı ve giriş sonrası gideceği sayfa
+    const ROLLER = {
+      admin:     { ad: "Admin",     sayfa: "admin.html" },
+      yonetici:  { ad: "Yönetici",  sayfa: "yonetici.html" },
+      kullanici: { ad: "Kullanıcı", sayfa: "kullanici.html" }
+    };
+
+    let seciliRol = null;
+
+    const rolButonlari = document.querySelectorAll(".rol");
+    const form  = document.getElementById("girisFormu");
+    const bilgi = document.getElementById("bilgi");
+    const btn   = document.getElementById("girisBtn");
+    const hata  = document.getElementById("hata");
+
+    // Rol seçimi
+    rolButonlari.forEach(function (buton) {
+      buton.addEventListener("click", function () {
+        rolButonlari.forEach(b => b.classList.remove("secili"));
+        buton.classList.add("secili");
+
+        seciliRol = buton.dataset.rol;
+        bilgi.style.display = "none";
+        form.classList.add("goster");
+        btn.textContent = ROLLER[seciliRol].ad + " olarak giriş yap";
+        hata.classList.remove("goster");
+
+        document.getElementById("eposta").focus();
+      });
+    });
+
+    // Form gönderimi
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const eposta = document.getElementById("eposta").value.trim();
+      const sifre  = document.getElementById("sifre").value;
+
+      if (!seciliRol) return hataGoster("Lütfen önce rolünüzü seçin.");
+      if (!eposta || !sifre) return hataGoster("E-posta/kullanıcı adı ve şifre boş bırakılamaz.");
+      if (sifre.length < 6) return hataGoster("Şifre en az 6 karakter olmalıdır.");
+
+      hata.classList.remove("goster");
+
+      // NOT: Gerçek sistemde bilgiler burada backend'e gönderilip doğrulanmalıdır.
+
+      const rol = ROLLER[seciliRol];
+      btn.disabled = true;
+      btn.textContent = "Giriş yapılıyor...";
+
+      setTimeout(function () {
+        alert(rol.ad + " olarak giriş başarılı! → " + rol.sayfa);
+        // window.location.href = rol.sayfa;   // Panel sayfaları hazır olunca bu satırı açın
+        btn.disabled = false;
+        btn.textContent = rol.ad + " olarak giriş yap";
+      }, 600);
+    });
+
+    function hataGoster(mesaj) {
+      hata.textContent = mesaj;
+      hata.classList.add("goster");
+    }
+  </script>
+
+</body>
+</html>
