@@ -17,7 +17,6 @@ public class Employee
     public string Email { get; set; } = string.Empty;
 
     // Şifrenin kendisi değil, şifrelenmiş (hash) hali saklanır.
-    [Required]
     public string PasswordHash { get; set; } = string.Empty;
 
     public int? DepartmentId { get; set; }

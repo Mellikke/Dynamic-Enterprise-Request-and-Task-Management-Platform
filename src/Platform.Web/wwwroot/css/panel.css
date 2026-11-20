@@ -1,0 +1,143 @@
+:root {
+  --lacivert: #0b1f4d;
+  --lacivert-acik: #1e3a8a;
+  --menu-yazi: #c7d2e8;
+  --menu-baslik: #7f8fb5;
+  --beyaz: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --sayfa-bg: #f5f7fb;
+  --ust-yukseklik: 56px;
+  --yan-genislik: 240px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: var(--text);
+  background: var(--sayfa-bg);
+}
+
+/* ---------- Üst bar ---------- */
+.ust-bar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--ust-yukseklik);
+  background: var(--lacivert);
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 16px;
+  z-index: 100;
+}
+.marka {
+  color: var(--beyaz); font-size: 18px; font-weight: 600;
+  text-decoration: none;
+  width: calc(var(--yan-genislik) - 60px);
+}
+.menu-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--menu-yazi); font-size: 22px;
+}
+.menu-btn:hover { color: var(--beyaz); }
+
+.arama { margin-left: auto; display: flex; }
+.arama input {
+  padding: 8px 12px; width: 220px; font-size: 14px;
+  border: none; border-radius: 6px 0 0 6px;
+}
+.arama input:focus { outline: none; }
+.arama button {
+  border: none; cursor: pointer; padding: 0 12px;
+  background: var(--lacivert-acik); color: var(--beyaz);
+  border-radius: 0 6px 6px 0;
+}
+
+.kullanici { position: relative; }
+.kullanici-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--menu-yazi); font-size: 20px;
+  display: flex; align-items: center; gap: 4px;
+}
+.kullanici-btn:hover { color: var(--beyaz); }
+.kullanici-btn .bi-caret-down-fill { font-size: 11px; }
+
+.kullanici-menu {
+  display: none;
+  position: absolute; right: 0; top: 40px;
+  min-width: 160px; padding: 6px 0;
+  background: var(--beyaz);
+  border: 1px solid var(--border); border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(11, 31, 77, 0.15);
+}
+.kullanici-menu.acik { display: block; }
+.kullanici-menu a {
+  display: block; padding: 8px 16px;
+  color: var(--text); text-decoration: none; font-size: 14px;
+}
+.kullanici-menu a:hover { background: var(--sayfa-bg); }
+.kullanici-menu hr { border: none; border-top: 1px solid var(--border); margin: 6px 0; }
+
+/* ---------- Sol menü ---------- */
+.yan-menu {
+  position: fixed; top: var(--ust-yukseklik); bottom: 0; left: 0;
+  width: var(--yan-genislik);
+  background: var(--lacivert);
+  overflow-y: auto;
+  padding: 8px 0;
+  display: flex; flex-direction: column;
+  transition: transform 0.2s ease;
+  z-index: 90;
+}
+.menu-baslik {
+  color: var(--menu-baslik);
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 18px 20px 8px;
+}
+.menu-link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 20px;
+  color: var(--menu-yazi); text-decoration: none; font-size: 14px;
+}
+.menu-link i { font-size: 16px; width: 18px; }
+.menu-link:hover,
+.menu-link.aktif { color: var(--beyaz); background: rgba(255, 255, 255, 0.08); }
+
+.yan-alt {
+  margin-top: auto;
+  padding: 14px 20px;
+  font-size: 12px; color: var(--menu-baslik);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.yan-alt strong { color: var(--beyaz); font-size: 13px; }
+
+/* ---------- İçerik ---------- */
+.icerik-alani {
+  margin-left: var(--yan-genislik);
+  padding-top: var(--ust-yukseklik);
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  transition: margin-left 0.2s ease;
+}
+.icerik { flex: 1; padding: 28px 32px; }
+.sayfa-baslik { font-size: 28px; color: var(--lacivert); margin-bottom: 20px; }
+
+.alt-bilgi {
+  padding: 16px 32px;
+  font-size: 12px; color: var(--muted);
+  background: var(--beyaz);
+  border-top: 1px solid var(--border);
+}
+
+/* ---------- Menü kapalıyken ---------- */
+body.menu-kapali .yan-menu { transform: translateX(-100%); }
+body.menu-kapali .icerik-alani { margin-left: 0; }
+
+/* ---------- Mobil ---------- */
+@media (max-width: 768px) {
+  .yan-menu { transform: translateX(-100%); }
+  .icerik-alani { margin-left: 0; }
+  body.menu-acik .yan-menu { transform: translateX(0); }
+  .arama { display: none; }
+  .marka { width: auto; }
+}

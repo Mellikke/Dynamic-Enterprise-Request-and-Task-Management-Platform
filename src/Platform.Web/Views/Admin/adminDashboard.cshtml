@@ -1,0 +1,136 @@
+@{
+    ViewData["Title"] = "Admin Paneli";
+    Layout = "_Layout";
+}
+
+<style>
+  .sayfa-aciklama { color: var(--muted); font-size: 14px; margin: -12px 0 24px; }
+
+  .kartlar { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .ozet-kart { background: var(--beyaz); border: 1px solid var(--border); border-radius: 12px; padding: 18px; display: flex; align-items: center; gap: 14px; }
+  .ozet-ikon { width: 44px; height: 44px; border-radius: 10px; background: #e8edf8; color: var(--lacivert-acik); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .ozet-sayi { font-size: 24px; font-weight: 700; color: var(--lacivert); }
+  .ozet-etiket { font-size: 13px; color: var(--muted); }
+
+  .iki-kolon { display: grid; grid-template-columns: 1fr 2fr; gap: 16px; }
+  .panel-kutu { background: var(--beyaz); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .panel-kutu h2 { font-size: 16px; color: var(--lacivert); margin-bottom: 16px; }
+
+  .durum-satir { margin-bottom: 14px; }
+  .durum-ust { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+  .cubuk { height: 8px; background: var(--sayfa-bg); border-radius: 4px; overflow: hidden; }
+  .dolgu { height: 100%; border-radius: 4px; }
+  .dolgu-bekliyor { background: #f59e0b; }
+  .dolgu-devam { background: var(--lacivert-acik); }
+  .dolgu-tamam { background: #16a34a; }
+
+  .tablo { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .tablo th { text-align: left; font-size: 12px; font-weight: 600; color: var(--muted); padding: 8px; border-bottom: 1px solid var(--border); }
+  .tablo td { padding: 10px 8px; border-bottom: 1px solid var(--border); }
+
+  .rozet { font-size: 12px; padding: 3px 8px; border-radius: 6px; font-weight: 600; }
+  .rozet-bekliyor { background: #fef3c7; color: #92400e; }
+  .rozet-devam { background: #dbeafe; color: #1e3a8a; }
+  .rozet-tamam { background: #dcfce7; color: #166534; }
+
+  @@media (max-width: 900px) {
+    .iki-kolon { grid-template-columns: 1fr; }
+  }
+</style>
+
+<p class="sayfa-aciklama">Sistemin genel durumunu buradan takip edebilirsin.</p>
+
+<!-- Özet kartları -->
+<div class="kartlar">
+  <div class="ozet-kart">
+    <div class="ozet-ikon"><i class="bi bi-person-badge"></i></div>
+    <div>
+      <div class="ozet-sayi">12</div>
+      <div class="ozet-etiket">Aktif çalışan</div>
+    </div>
+  </div>
+
+  <div class="ozet-kart">
+    <div class="ozet-ikon"><i class="bi bi-building"></i></div>
+    <div>
+      <div class="ozet-sayi">4</div>
+      <div class="ozet-etiket">Departman</div>
+    </div>
+  </div>
+
+  <div class="ozet-kart">
+    <div class="ozet-ikon"><i class="bi bi-people"></i></div>
+    <div>
+      <div class="ozet-sayi">3</div>
+      <div class="ozet-etiket">Çalışma grubu</div>
+    </div>
+  </div>
+
+  <div class="ozet-kart">
+    <div class="ozet-ikon"><i class="bi bi-list-check"></i></div>
+    <div>
+      <div class="ozet-sayi">10</div>
+      <div class="ozet-etiket">Toplam görev</div>
+    </div>
+  </div>
+</div>
+
+<div class="iki-kolon">
+
+  <!-- Görev durumu -->
+  <section class="panel-kutu">
+    <h2>Görev durumu</h2>
+
+    <div class="durum-satir">
+      <div class="durum-ust"><span>Bekliyor</span><span>4</span></div>
+      <div class="cubuk"><div class="dolgu dolgu-bekliyor" style="width: 40%"></div></div>
+    </div>
+
+    <div class="durum-satir">
+      <div class="durum-ust"><span>Devam ediyor</span><span>3</span></div>
+      <div class="cubuk"><div class="dolgu dolgu-devam" style="width: 30%"></div></div>
+    </div>
+
+    <div class="durum-satir">
+      <div class="durum-ust"><span>Tamamlandı</span><span>3</span></div>
+      <div class="cubuk"><div class="dolgu dolgu-tamam" style="width: 30%"></div></div>
+    </div>
+  </section>
+
+  <!-- Son görevler -->
+  <section class="panel-kutu">
+    <h2>Son eklenen görevler</h2>
+
+    <table class="tablo">
+      <thead>
+        <tr>
+          <th>Görev</th>
+          <th>Grup</th>
+          <th>Durum</th>
+          <th>Bitiş</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Rapor taslağını hazırla</td>
+          <td>Analiz Ekibi</td>
+          <td><span class="rozet rozet-devam">Devam ediyor</span></td>
+          <td>20.11.2026</td>
+        </tr>
+        <tr>
+          <td>Toplantı notlarını paylaş</td>
+          <td>Proje Ekibi</td>
+          <td><span class="rozet rozet-bekliyor">Bekliyor</span></td>
+          <td>22.11.2026</td>
+        </tr>
+        <tr>
+          <td>Veritabanı yedeğini al</td>
+          <td>Bilgi İşlem</td>
+          <td><span class="rozet rozet-tamam">Tamamlandı</span></td>
+          <td>15.11.2026</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+</div>

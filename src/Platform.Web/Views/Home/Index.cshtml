@@ -67,6 +67,7 @@
       font: inherit;
       color: inherit;
     }
+    .rol { display: block; text-decoration: none; }
     .rol:hover { border-color: #a5b4d4; transform: translateY(-2px); }
     .rol .ad { font-weight: 600; font-size: 15px; }
     .rol .aciklama { font-size: 11px; color: var(--muted); margin-top: 4px; }
@@ -150,6 +151,7 @@
       .rol .aciklama { display: none; }
     }
   </style>
+  
 </head>
 <body>
 
@@ -161,20 +163,17 @@
 
     <p class="soru">Kim olarak giriş yapıyorsunuz?</p>
 
-    <div class="roller">
-      <button type="button" class="rol" data-rol="admin">
-        <div class="ad">Admin</div>
-        <div class="aciklama">Sistem yönetimi</div>
-      </button>
-      <button type="button" class="rol" data-rol="yonetici">
-        <div class="ad">Yönetici</div>
-        <div class="aciklama">Ekip ve onaylar</div>
-      </button>
-      <button type="button" class="rol" data-rol="kullanici">
-        <div class="ad">Kullanıcı</div>
-        <div class="aciklama">Talep ve görevler</div>
-      </button>
-    </div>
+  <div class="roller">
+    <a class="rol" asp-controller="Home" asp-action="adminGiris">
+      <div class="ad">Admin</div>
+    </a>
+    <a class="rol" asp-controller="Home" asp-action="yoneticiGiris">
+      <div class="ad">Yönetici</div>
+    </a>
+    <a class="rol" asp-controller="Home" asp-action="kullaniciGiris">
+      <div class="ad">Kullanıcı</div>
+    </a>
+  </div>
 
     <p class="bilgi" id="bilgi">Lütfen yukarıdan rolünüzü seçin.</p>
 
@@ -199,7 +198,7 @@
       <button type="submit" class="giris-btn" id="girisBtn">Giriş Yap</button>
     </form>
 
-    <p class="alt">© 2026 Tüm hakları saklıdır.</p>
+    
   </div>
 
   <script>

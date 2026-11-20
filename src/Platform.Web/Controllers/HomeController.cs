@@ -15,6 +15,19 @@ public class HomeController : Controller
     {
         return View();
     }
+    public IActionResult kullaniciGiris()
+    {
+        return View();
+    }
+    public IActionResult yoneticiGiris()
+    {
+        return View();
+    }
+    public IActionResult adminGiris()
+    {
+        return View();
+    }
+    
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

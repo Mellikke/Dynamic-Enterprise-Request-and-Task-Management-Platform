@@ -232,3 +232,5 @@
 /Users/melikeyildiz/Desktop/Dynamic-Enterprise-Request-and-Task-Management-Platform/src/Platform.Web/bin/Debug/net10.0/runtimes/win-x86/native/msalruntime_x86.dll
 /Users/melikeyildiz/Desktop/Dynamic-Enterprise-Request-and-Task-Management-Platform/src/Platform.Web/bin/Debug/net10.0/runtimes/win/lib/net10.0/System.Security.Cryptography.Pkcs.dll
 /Users/melikeyildiz/Desktop/Dynamic-Enterprise-Request-and-Task-Management-Platform/src/Platform.Web/obj/Debug/net10.0/Platform.C28EC692.Up2Date
+/Users/melikeyildiz/Desktop/Dynamic-Enterprise-Request-and-Task-Management-Platform/src/Platform.Web/obj/Debug/net10.0/compressed/zq3bsymaow-{0}-n6b234nm6w-n6b234nm6w.gz
+/Users/melikeyildiz/Desktop/Dynamic-Enterprise-Request-and-Task-Management-Platform/src/Platform.Web/obj/Debug/net10.0/compressed/dwoe9onb6l-{0}-nt70vdvm1o-nt70vdvm1o.gz
