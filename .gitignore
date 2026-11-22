@@ -1,0 +1,55 @@
+# ---------------------------------------------------------------
+# ASP.NET Core / .NET
+# ---------------------------------------------------------------
+
+# Derleme çıktıları
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Ll]og/
+[Ll]ogs/
+publish/
+*.nupkg
+*.snupkg
+
+# Visual Studio / Rider / VS Code
+.vs/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.rsuser
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Test sonuçları
+[Tt]est[Rr]esult*/
+*.trx
+coverage*.json
+coverage*.xml
+
+# ---------------------------------------------------------------
+# Gizli bilgiler — bağlantı dizeleri ve şifreler GitHub'a gönderilmez.
+# Her geliştirici kendi appsettings dosyalarını yerelde oluşturur
+# (veya `dotnet user-secrets` kullanır).
+# ---------------------------------------------------------------
+appsettings.json
+appsettings.Development.json
+appsettings.*.local.json
+*.env
+.env*
+
+# ---------------------------------------------------------------
+# İşletim sistemi dosyaları
+# ---------------------------------------------------------------
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini
