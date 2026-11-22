@@ -1,0 +1,111 @@
+@using Platform.Web.Models.ViewModels
+@model PersonelEkleViewModel
+@{
+    ViewData["Title"] = "Yeni Personel";
+    var kayitAcik = User.Identity?.IsAuthenticated == true && User.IsInRole("Admin");
+}
+
+<link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+
+<p class="sayfa-aciklama">Yeni bir personel ekle. Bu ekrandan sadece Çalışan veya Yönetici rolü atanabilir.</p>
+
+@if (!kayitAcik)
+{
+  <div class="uyari uyari-bilgi">
+    <i class="bi bi-info-circle"></i>
+    Yetkilendirme sistemi tamamlanana kadar kayıt devre dışı. Formu deneyebilirsin ama bilgiler kaydedilmez.
+  </div>
+}
+
+@* Tarayıcıdaki kontroller sunucudaki kurallarla aynıdır ve sadece anlık geri bildirim içindir;
+   asıl doğrulama her zaman sunucuda (PersonelEkleViewModel + AdminController) yapılır. *@
+<section class="panel-kutu form-kutu form-kutu-genis">
+  <form asp-controller="Admin" asp-action="PersonelEkle" method="post" data-admin-form>
+    <div asp-validation-summary="ModelOnly" class="uyari uyari-hata"></div>
+
+    <div class="form-satir">
+      <div class="form-alan">
+        <label asp-for="Ad"></label>
+        <input asp-for="Ad" autocomplete="off" autofocus
+               required minlength="2" maxlength="100" pattern="@PersonelEkleViewModel.IsimDeseni"
+               data-dogrula data-duzenle="bosluk"
+               data-msg-zorunlu="Ad zorunludur."
+               data-msg-uzunluk="Ad 2 ile 100 karakter arasında olmalıdır."
+               data-msg-desen="Ad @PersonelEkleViewModel.IsimDeseniMesaji">
+        <span asp-validation-for="Ad" class="alan-hata"></span>
+      </div>
+
+      <div class="form-alan">
+        <label asp-for="Soyad"></label>
+        <input asp-for="Soyad" autocomplete="off"
+               required minlength="2" maxlength="100" pattern="@PersonelEkleViewModel.IsimDeseni"
+               data-dogrula data-duzenle="bosluk"
+               data-msg-zorunlu="Soyad zorunludur."
+               data-msg-uzunluk="Soyad 2 ile 100 karakter arasında olmalıdır."
+               data-msg-desen="Soyad @PersonelEkleViewModel.IsimDeseniMesaji">
+        <span asp-validation-for="Soyad" class="alan-hata"></span>
+      </div>
+    </div>
+
+    <div class="form-alan">
+      <label asp-for="Eposta"></label>
+      <input asp-for="Eposta" type="email" placeholder="ornek@sirket.com" autocomplete="off"
+             required maxlength="255"
+             data-dogrula data-duzenle="kirp"
+             data-msg-zorunlu="E-posta zorunludur."
+             data-msg-uzunluk="E-posta en fazla 255 karakter olabilir."
+             data-msg-eposta="Geçerli bir e-posta adresi girin.">
+      <span asp-validation-for="Eposta" class="alan-hata"></span>
+    </div>
+
+    <div class="form-satir">
+      <div class="form-alan">
+        <label asp-for="DepartmanId"></label>
+        <select asp-for="DepartmanId" asp-items="Model.Departmanlar">
+          <option value="">Departman seçilmedi</option>
+        </select>
+        <span asp-validation-for="DepartmanId" class="alan-hata"></span>
+      </div>
+
+      <div class="form-alan">
+        <label asp-for="RolId"></label>
+        <select asp-for="RolId" asp-items="Model.Roller"
+                required data-dogrula data-msg-zorunlu="Rol seçimi zorunludur."></select>
+        <span asp-validation-for="RolId" class="alan-hata"></span>
+      </div>
+    </div>
+
+    @* Şifre alanları bilerek asp-for kullanmıyor: hata sonrasında değerleri asla geri doldurulmaz. *@
+    <div class="form-satir">
+      <div class="form-alan">
+        <label asp-for="Sifre"></label>
+        <input type="password" id="Sifre" name="Sifre" autocomplete="new-password"
+               required minlength="8" maxlength="100" pattern="@PersonelEkleViewModel.SifreDeseni"
+               data-dogrula
+               data-msg-zorunlu="Şifre zorunludur."
+               data-msg-uzunluk="Şifre en az 8 karakter olmalıdır."
+               data-msg-desen="Şifre en az bir büyük harf, bir küçük harf ve bir rakam içermelidir.">
+        <span asp-validation-for="Sifre" class="alan-hata"></span>
+      </div>
+
+      <div class="form-alan">
+        <label asp-for="SifreTekrar"></label>
+        <input type="password" id="SifreTekrar" name="SifreTekrar" autocomplete="new-password"
+               required data-dogrula data-eslesme="Sifre"
+               data-msg-zorunlu="Şifre tekrarı zorunludur."
+               data-msg-eslesme="Şifreler eşleşmiyor.">
+        <span asp-validation-for="SifreTekrar" class="alan-hata"></span>
+      </div>
+    </div>
+    <p class="alan-ipucu">En az 8 karakter; en az bir büyük harf, bir küçük harf ve bir rakam.</p>
+
+    <div class="form-butonlar">
+      <button type="submit" class="buton buton-birincil"><i class="bi bi-check-lg"></i> Kaydet</button>
+      <a class="buton buton-ikincil" asp-controller="Admin" asp-action="Personeller">Vazgeç</a>
+    </div>
+  </form>
+</section>
+
+@section Scripts {
+  <script src="~/js/admin-form.js" asp-append-version="true"></script>
+}

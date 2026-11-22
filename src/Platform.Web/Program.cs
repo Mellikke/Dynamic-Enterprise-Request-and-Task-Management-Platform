@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Platform.Web.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
+using Platform.Web.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         options.LoginPath = "/Home/adminGiris";   // Giriş yapmamış biri korumalı sayfaya girerse buraya gönderilir
     });
+
+// Şifreleri hash'lemek / doğrulamak için (ASP.NET Core içinde hazır gelir, ek paket gerekmez)
+builder.Services.AddScoped<IPasswordHasher<Employee>, PasswordHasher<Employee>>();
 
 var app = builder.Build();
 

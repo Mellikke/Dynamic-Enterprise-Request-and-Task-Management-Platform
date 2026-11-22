@@ -1,7 +1,18 @@
+@using Platform.Web.Models.Enums
+@using Platform.Web.Models.ViewModels
+@model AdminDashboardViewModel
 @{
     ViewData["Title"] = "Admin Paneli";
     Layout = "_Layout";
+
+    // Görev modülü bağlanana kadar Model.Gorevler null'dır; o durumda "—" gösterilir.
+    var gorev = Model.Gorevler;
+    string Sayi(int? deger) => deger?.ToString() ?? "—";
 }
+
+@* admin.css: tablo içi bağlantılar (.tablo-link), soluk yazı (.soluk) ve pasif rozeti (.rozet-pasif) için.
+   Bu sayfanın kendi stil bloğu sonra geldiği için kartlar, tablo ve rozet stilleri önceliklidir; mevcut görünüm değişmez. *@
+<link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
 
 <style>
   .sayfa-aciklama { color: var(--muted); font-size: 14px; margin: -12px 0 24px; }
@@ -36,68 +47,102 @@
   @@media (max-width: 900px) {
     .iki-kolon { grid-template-columns: 1fr; }
   }
+
+  /* --- Dinamik dashboard eklemeleri (mevcut stiller yukarıda aynen duruyor) --- */
+  .ozet-alt { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .iki-kolon + .iki-kolon { margin-top: 16px; }
+  .bos-mesaj { font-size: 13px; color: var(--muted); margin: 4px 0 0; }
+  .tablo td.bos-hucre { text-align: center; color: var(--muted); padding: 24px 8px; }
+  .alt-baslik { font-size: 13px; font-weight: 600; color: var(--lacivert); margin: 18px 0 10px; padding-top: 14px; border-top: 1px solid var(--border); }
+  .alt-not { font-size: 12px; color: var(--muted); margin: 4px 0 0; }
+  .ozet-alti { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 14px; font-size: 13px; color: var(--muted); }
+  .ozet-alti strong { color: var(--text); }
 </style>
 
 <p class="sayfa-aciklama">Sistemin genel durumunu buradan takip edebilirsin.</p>
 
-<!-- Özet kartları -->
+<!-- Özet kartları (yerleşim ve sıra korunuyor) -->
 <div class="kartlar">
   <div class="ozet-kart">
     <div class="ozet-ikon"><i class="bi bi-person-badge"></i></div>
     <div>
-      <div class="ozet-sayi">12</div>
+      <div class="ozet-sayi">@Model.AktifPersonel</div>
       <div class="ozet-etiket">Aktif çalışan</div>
+      <div class="ozet-alt">@Model.ToplamPersonel toplam · @Model.PasifPersonel pasif</div>
     </div>
   </div>
 
   <div class="ozet-kart">
     <div class="ozet-ikon"><i class="bi bi-building"></i></div>
     <div>
-      <div class="ozet-sayi">4</div>
+      <div class="ozet-sayi">@Model.DepartmanSayisi</div>
       <div class="ozet-etiket">Departman</div>
+      <div class="ozet-alt">
+        @if (Model.DepartmanSayisi == 0)
+        {
+          @:Henüz departman yok
+        }
+        else
+        {
+          @:@Model.YoneticisiAtanmisDepartmanSayisi / @Model.DepartmanSayisi yöneticisi atanmış
+        }
+      </div>
     </div>
   </div>
 
   <div class="ozet-kart">
     <div class="ozet-ikon"><i class="bi bi-people"></i></div>
     <div>
-      <div class="ozet-sayi">3</div>
+      <div class="ozet-sayi">@Sayi(gorev?.CalismaGrubuSayisi)</div>
       <div class="ozet-etiket">Çalışma grubu</div>
+      @if (gorev is null)
+      {
+        <div class="ozet-alt">Henüz veri yok</div>
+      }
     </div>
   </div>
 
   <div class="ozet-kart">
     <div class="ozet-ikon"><i class="bi bi-list-check"></i></div>
     <div>
-      <div class="ozet-sayi">10</div>
+      <div class="ozet-sayi">@Sayi(gorev?.ToplamGorev)</div>
       <div class="ozet-etiket">Toplam görev</div>
+      @if (gorev is null)
+      {
+        <div class="ozet-alt">Henüz veri yok</div>
+      }
     </div>
   </div>
 </div>
 
 <div class="iki-kolon">
 
-  <!-- Görev durumu -->
+  <!-- Görev durumu (başlık, yapı ve konum korunuyor; veriler görev modülü bağlanınca gelecek) -->
   <section class="panel-kutu">
     <h2>Görev durumu</h2>
 
     <div class="durum-satir">
-      <div class="durum-ust"><span>Bekliyor</span><span>4</span></div>
-      <div class="cubuk"><div class="dolgu dolgu-bekliyor" style="width: 40%"></div></div>
+      <div class="durum-ust"><span>Bekliyor</span><span>@Sayi(gorev?.Bekliyor)</span></div>
+      <div class="cubuk"><div class="dolgu dolgu-bekliyor" style="width: @(AdminDashboardViewModel.Yuzde(gorev?.Bekliyor ?? 0, gorev?.ToplamGorev ?? 0))%"></div></div>
     </div>
 
     <div class="durum-satir">
-      <div class="durum-ust"><span>Devam ediyor</span><span>3</span></div>
-      <div class="cubuk"><div class="dolgu dolgu-devam" style="width: 30%"></div></div>
+      <div class="durum-ust"><span>Devam ediyor</span><span>@Sayi(gorev?.DevamEdiyor)</span></div>
+      <div class="cubuk"><div class="dolgu dolgu-devam" style="width: @(AdminDashboardViewModel.Yuzde(gorev?.DevamEdiyor ?? 0, gorev?.ToplamGorev ?? 0))%"></div></div>
     </div>
 
     <div class="durum-satir">
-      <div class="durum-ust"><span>Tamamlandı</span><span>3</span></div>
-      <div class="cubuk"><div class="dolgu dolgu-tamam" style="width: 30%"></div></div>
+      <div class="durum-ust"><span>Tamamlandı</span><span>@Sayi(gorev?.Tamamlandi)</span></div>
+      <div class="cubuk"><div class="dolgu dolgu-tamam" style="width: @(AdminDashboardViewModel.Yuzde(gorev?.Tamamlandi ?? 0, gorev?.ToplamGorev ?? 0))%"></div></div>
     </div>
+
+    @if (gorev is null)
+    {
+      <p class="bos-mesaj">Görev verileri henüz mevcut değil.</p>
+    }
   </section>
 
-  <!-- Son görevler -->
+  <!-- Son görevler (başlık ve tablo yapısı korunuyor) -->
   <section class="panel-kutu">
     <h2>Son eklenen görevler</h2>
 
@@ -111,26 +156,130 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Rapor taslağını hazırla</td>
-          <td>Analiz Ekibi</td>
-          <td><span class="rozet rozet-devam">Devam ediyor</span></td>
-          <td>20.11.2026</td>
-        </tr>
-        <tr>
-          <td>Toplantı notlarını paylaş</td>
-          <td>Proje Ekibi</td>
-          <td><span class="rozet rozet-bekliyor">Bekliyor</span></td>
-          <td>22.11.2026</td>
-        </tr>
-        <tr>
-          <td>Veritabanı yedeğini al</td>
-          <td>Bilgi İşlem</td>
-          <td><span class="rozet rozet-tamam">Tamamlandı</span></td>
-          <td>15.11.2026</td>
-        </tr>
+        @if (gorev is null || gorev.SonGorevler.Count == 0)
+        {
+          <tr>
+            <td colspan="4" class="bos-hucre">Görev verileri henüz mevcut değil.</td>
+          </tr>
+        }
+        else
+        {
+          foreach (var g in gorev.SonGorevler)
+          {
+            var (rozetSinifi, durumAdi) = g.Durum switch
+            {
+                TaskItemStatus.Pending => ("rozet-bekliyor", "Bekliyor"),
+                TaskItemStatus.InProgress => ("rozet-devam", "Devam ediyor"),
+                _ => ("rozet-tamam", "Tamamlandı")
+            };
+            <tr>
+              <td>@g.Baslik</td>
+              <td>@g.GrupAdi</td>
+              <td><span class="rozet @rozetSinifi">@durumAdi</span></td>
+              <td>@(g.BitisTarihi?.ToString("dd.MM.yyyy") ?? "—")</td>
+            </tr>
+          }
+        }
       </tbody>
     </table>
+  </section>
+
+</div>
+
+<div class="iki-kolon">
+
+  <!-- Personel durumu (Admin hesapları sayılmaz) -->
+  <section class="panel-kutu">
+    <h2>Personel durumu</h2>
+
+    @if (Model.ToplamPersonel == 0)
+    {
+      <p class="bos-mesaj">Henüz personel eklenmemiş.</p>
+    }
+    else
+    {
+      <div class="durum-satir">
+        <div class="durum-ust"><span>Aktif</span><span>@Model.AktifPersonel</span></div>
+        <div class="cubuk"><div class="dolgu dolgu-tamam" style="width: @(AdminDashboardViewModel.Yuzde(Model.AktifPersonel, Model.ToplamPersonel))%"></div></div>
+      </div>
+
+      <div class="durum-satir">
+        <div class="durum-ust"><span>Pasif</span><span>@Model.PasifPersonel</span></div>
+        <div class="cubuk"><div class="dolgu dolgu-bekliyor" style="width: @(AdminDashboardViewModel.Yuzde(Model.PasifPersonel, Model.ToplamPersonel))%"></div></div>
+      </div>
+
+      <h3 class="alt-baslik">Rol dağılımı (sadece aktif personel)</h3>
+
+      <div class="durum-satir">
+        <div class="durum-ust"><span>Çalışan rolü</span><span>@Model.AktifCalisanRolu</span></div>
+        <div class="cubuk"><div class="dolgu dolgu-devam" style="width: @(AdminDashboardViewModel.Yuzde(Model.AktifCalisanRolu, Model.AktifPersonel))%"></div></div>
+      </div>
+
+      <div class="durum-satir">
+        <div class="durum-ust"><span>Yönetici rolü</span><span>@Model.AktifYoneticiRolu</span></div>
+        <div class="cubuk"><div class="dolgu dolgu-devam" style="width: @(AdminDashboardViewModel.Yuzde(Model.AktifYoneticiRolu, Model.AktifPersonel))%"></div></div>
+      </div>
+    }
+
+    <p class="alt-not">Admin hesapları personel sayılarına dahil değildir. Yönetici rolü, bir departmana yönetici olarak atanmış olmak anlamına gelmez.</p>
+  </section>
+
+  <!-- Departman özeti -->
+  <section class="panel-kutu">
+    <h2>Departman özeti</h2>
+
+    <table class="tablo">
+      <thead>
+        <tr>
+          <th>Departman</th>
+          <th>Aktif personel</th>
+          <th>Departman yöneticisi</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (Model.DepartmanSayisi == 0)
+        {
+          <tr>
+            <td colspan="3" class="bos-hucre">
+              Henüz departman eklenmemiş.
+              <a class="tablo-link" asp-controller="Admin" asp-action="DepartmanEkle">Departman ekle</a>
+            </td>
+          </tr>
+        }
+        else
+        {
+          foreach (var d in Model.Departmanlar)
+          {
+            <tr>
+              <td>@d.Ad</td>
+              <td>@d.AktifPersonel</td>
+              <td>
+                @if (d.YoneticiAdi is null)
+                {
+                  <span class="soluk">Atanmadı</span>
+                }
+                else
+                {
+                  @d.YoneticiAdi
+                  if (!d.YoneticiAktif)
+                  {
+                    <span class="rozet rozet-pasif">Pasif</span>
+                  }
+                }
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+
+    <div class="ozet-alti">
+      <span>
+        Yöneticisi atanmış departman: <strong>@Model.YoneticisiAtanmisDepartmanSayisi / @Model.DepartmanSayisi</strong>
+        · Departmansız aktif personel: <strong>@Model.DepartmansizAktifPersonel</strong>
+      </span>
+      <a class="tablo-link" asp-controller="Admin" asp-action="Departmanlar">Tüm departmanlar <i class="bi bi-arrow-right"></i></a>
+    </div>
   </section>
 
 </div>

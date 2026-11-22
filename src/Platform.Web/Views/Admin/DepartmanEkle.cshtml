@@ -1,0 +1,43 @@
+@model Platform.Web.Models.ViewModels.DepartmanEkleViewModel
+@{
+    ViewData["Title"] = "Yeni Departman";
+    var kayitAcik = User.Identity?.IsAuthenticated == true && User.IsInRole("Admin");
+}
+
+<link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+
+<p class="sayfa-aciklama">Yeni bir departman oluştur. Aynı isimde ikinci bir departman eklenemez.</p>
+
+@if (!kayitAcik)
+{
+  <div class="uyari uyari-bilgi">
+    <i class="bi bi-info-circle"></i>
+    Yetkilendirme sistemi tamamlanana kadar kayıt devre dışı. Formu deneyebilirsin ama bilgiler kaydedilmez.
+  </div>
+}
+
+@* Tarayıcıdaki kontroller sadece anlık geri bildirim içindir; asıl doğrulama sunucuda yapılır. *@
+<section class="panel-kutu form-kutu">
+  <form asp-controller="Admin" asp-action="DepartmanEkle" method="post" data-admin-form>
+    <div asp-validation-summary="ModelOnly" class="uyari uyari-hata"></div>
+
+    <div class="form-alan">
+      <label asp-for="Ad"></label>
+      <input asp-for="Ad" placeholder="Örn. İnsan Kaynakları" autocomplete="off" autofocus
+             required minlength="2" maxlength="150"
+             data-dogrula data-duzenle="bosluk"
+             data-msg-zorunlu="Departman adı zorunludur."
+             data-msg-uzunluk="Departman adı 2 ile 150 karakter arasında olmalıdır.">
+      <span asp-validation-for="Ad" class="alan-hata"></span>
+    </div>
+
+    <div class="form-butonlar">
+      <button type="submit" class="buton buton-birincil"><i class="bi bi-check-lg"></i> Kaydet</button>
+      <a class="buton buton-ikincil" asp-controller="Admin" asp-action="Departmanlar">Vazgeç</a>
+    </div>
+  </form>
+</section>
+
+@section Scripts {
+  <script src="~/js/admin-form.js" asp-append-version="true"></script>
+}

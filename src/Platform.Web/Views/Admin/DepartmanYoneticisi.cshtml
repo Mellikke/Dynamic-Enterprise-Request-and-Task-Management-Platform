@@ -1,0 +1,80 @@
+@model Platform.Web.Models.ViewModels.DepartmanYoneticiViewModel
+@{
+    var ilkAtama = Model.MevcutYoneticiId is null;
+    ViewData["Title"] = ilkAtama ? "Yönetici Ata" : "Yöneticiyi Değiştir";
+    var kayitAcik = User.Identity?.IsAuthenticated == true && User.IsInRole("Admin");
+}
+
+<link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+
+<p class="sayfa-aciklama">
+  Yönetici olarak sadece bu departmanda çalışan, aktif ve Yönetici rolündeki personel seçilebilir.
+  Mevcut yöneticinin rolü değiştirilmez.
+</p>
+
+@if (!kayitAcik)
+{
+  <div class="uyari uyari-bilgi">
+    <i class="bi bi-info-circle"></i>
+    Yetkilendirme sistemi tamamlanana kadar kayıt devre dışı. Formu inceleyebilirsin ama değişiklikler kaydedilmez.
+  </div>
+}
+
+<section class="panel-kutu form-kutu form-kutu-genis">
+  <dl class="bilgi-liste">
+    <div><dt>Departman</dt><dd>@Model.DepartmanAdi</dd></div>
+    <div>
+      <dt>Mevcut yönetici</dt>
+      <dd>
+        @if (Model.MevcutYoneticiAdi is null)
+        {
+          <span class="soluk">Atanmadı</span>
+        }
+        else
+        {
+          @Model.MevcutYoneticiAdi
+        }
+      </dd>
+    </div>
+  </dl>
+
+  @if (Model.Adaylar.Count == 0)
+  {
+    <div class="uyari uyari-dikkat">
+      <i class="bi bi-exclamation-triangle"></i>
+      Bu departmanda yönetici olarak atanabilecek personel yok. Atanabilmesi için personelin bu departmanda çalışması,
+      aktif olması, Yönetici rolünde olması ve başka bir departmanı yönetmemesi gerekir.
+      Bir personelin rolünü <a class="tablo-link" asp-controller="Admin" asp-action="Personeller">Çalışanlar</a>
+      sayfasından değiştirebilirsin.
+    </div>
+
+    <div class="form-butonlar">
+      <a class="buton buton-ikincil" asp-controller="Admin" asp-action="Departmanlar">Departmanlara dön</a>
+    </div>
+  }
+  else
+  {
+    <form asp-controller="Admin" asp-action="DepartmanYoneticisi" asp-route-id="@Model.DepartmanId" method="post" data-admin-form>
+      <div asp-validation-summary="ModelOnly" class="uyari uyari-hata"></div>
+
+      @* "Yönetici yok" seçeneği bilerek yok: mevcut yönetici yalnızca başka biriyle değiştirilebilir. *@
+      <div class="form-alan">
+        <label asp-for="YoneticiId"></label>
+        <select asp-for="YoneticiId" asp-items="Model.Adaylar"
+                required data-dogrula data-msg-zorunlu="Yönetici seçimi zorunludur.">
+          <option value="">Yönetici seçin</option>
+        </select>
+        <span asp-validation-for="YoneticiId" class="alan-hata"></span>
+      </div>
+
+      <div class="form-butonlar">
+        <button type="submit" class="buton buton-birincil"><i class="bi bi-check-lg"></i> Kaydet</button>
+        <a class="buton buton-ikincil" asp-controller="Admin" asp-action="Departmanlar">Vazgeç</a>
+      </div>
+    </form>
+  }
+</section>
+
+@section Scripts {
+  <script src="~/js/admin-form.js" asp-append-version="true"></script>
+}

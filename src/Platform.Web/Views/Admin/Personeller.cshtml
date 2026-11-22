@@ -1,0 +1,104 @@
+@model List<Platform.Web.Models.ViewModels.PersonelListeViewModel>
+@{
+    ViewData["Title"] = "Çalışanlar";
+}
+
+<link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+
+<div class="sayfa-ust">
+  <p class="sayfa-aciklama">Sistemdeki tüm personeli, departmanlarını ve rollerini buradan görebilirsin.</p>
+  <a class="buton buton-birincil" asp-controller="Admin" asp-action="PersonelEkle">
+    <i class="bi bi-person-plus"></i> Yeni Personel
+  </a>
+</div>
+
+@if (TempData["Basari"] is string basari)
+{
+  <div class="uyari uyari-basari">@basari</div>
+}
+@if (TempData["Bilgi"] is string bilgi)
+{
+  <div class="uyari uyari-bilgi">@bilgi</div>
+}
+@if (TempData["Hata"] is string hata)
+{
+  <div class="uyari uyari-hata">@hata</div>
+}
+
+<section class="panel-kutu">
+  @if (Model.Count == 0)
+  {
+    <div class="bos-durum">
+      <i class="bi bi-person-badge"></i>
+      Henüz personel eklenmemiş.
+    </div>
+  }
+  else
+  {
+    <div class="tablo-sarici">
+      <table class="tablo">
+        <thead>
+          <tr>
+            <th>Ad</th>
+            <th>Soyad</th>
+            <th>E-posta</th>
+            <th>Departman</th>
+            <th>Rol</th>
+            <th>Durum</th>
+            <th>İşlemler</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var personel in Model)
+          {
+            var rolSinifi = personel.RolId switch
+            {
+                Role.AdminId => "rozet-admin",
+                Role.ManagerId => "rozet-yonetici",
+                _ => "rozet-calisan"
+            };
+            <tr>
+              <td>@personel.Ad</td>
+              <td>@personel.Soyad</td>
+              <td>@personel.Eposta</td>
+              <td>
+                @if (personel.DepartmanAdi is null)
+                {
+                  <span class="soluk">Atanmadı</span>
+                }
+                else
+                {
+                  @personel.DepartmanAdi
+                }
+              </td>
+              <td><span class="rozet @rolSinifi">@personel.RolAdi</span></td>
+              <td>
+                @if (personel.Aktif)
+                {
+                  <span class="rozet rozet-aktif">Aktif</span>
+                }
+                else
+                {
+                  <span class="rozet rozet-pasif">Pasif</span>
+                }
+              </td>
+              <td>
+                @if (personel.RolId == Role.AdminId)
+                {
+                  @* Admin hesapları bu ekrandan düzenlenemez (sunucu tarafında da engelli). *@
+                  <span class="soluk" title="Admin hesapları bu ekrandan düzenlenemez">—</span>
+                }
+                else
+                {
+                  <a class="tablo-link" asp-controller="Admin" asp-action="PersonelDuzenle" asp-route-id="@personel.Id">
+                    <i class="bi bi-pencil"></i> Düzenle
+                  </a>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

@@ -1,0 +1,74 @@
+@model Platform.Web.Models.ViewModels.PersonelDuzenleViewModel
+@{
+    ViewData["Title"] = "Personel Düzenle";
+    var kayitAcik = User.Identity?.IsAuthenticated == true && User.IsInRole("Admin");
+    var yonetici = Model.YonettigiDepartmanlar.Count > 0;
+}
+
+<link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+
+<p class="sayfa-aciklama">Personelin departmanını, rolünü ve aktiflik durumunu değiştirebilirsin. Ad, soyad, e-posta ve şifre bu ekrandan değiştirilemez.</p>
+
+@if (!kayitAcik)
+{
+  <div class="uyari uyari-bilgi">
+    <i class="bi bi-info-circle"></i>
+    Yetkilendirme sistemi tamamlanana kadar kayıt devre dışı. Formu deneyebilirsin ama değişiklikler kaydedilmez.
+  </div>
+}
+
+<section class="panel-kutu form-kutu form-kutu-genis">
+  <dl class="bilgi-liste">
+    <div><dt>Ad</dt><dd>@Model.Ad</dd></div>
+    <div><dt>Soyad</dt><dd>@Model.Soyad</dd></div>
+    <div class="bilgi-genis"><dt>E-posta</dt><dd>@Model.Eposta</dd></div>
+  </dl>
+
+  @if (yonetici)
+  {
+    <div class="uyari uyari-dikkat">
+      <i class="bi bi-exclamation-triangle"></i>
+      Bu personel <strong>@string.Join(", ", Model.YonettigiDepartmanlar)</strong>
+      @(Model.YonettigiDepartmanlar.Count == 1 ? "departmanının" : "departmanlarının") yöneticisi.
+      Yerine başka bir yönetici atanmadan rolü Çalışan yapılamaz, pasif yapılamaz ve departmanı değiştirilemez.
+    </div>
+  }
+
+  <form asp-controller="Admin" asp-action="PersonelDuzenle" asp-route-id="@Model.Id" method="post" data-admin-form>
+    <div asp-validation-summary="ModelOnly" class="uyari uyari-hata"></div>
+
+    <div class="form-satir">
+      <div class="form-alan">
+        <label asp-for="DepartmanId"></label>
+        <select asp-for="DepartmanId" asp-items="Model.Departmanlar">
+          <option value="">Departman seçilmedi</option>
+        </select>
+        <span asp-validation-for="DepartmanId" class="alan-hata"></span>
+      </div>
+
+      <div class="form-alan">
+        <label asp-for="RolId"></label>
+        <select asp-for="RolId" asp-items="Model.Roller"
+                required data-dogrula data-msg-zorunlu="Rol seçimi zorunludur."></select>
+        <span asp-validation-for="RolId" class="alan-hata"></span>
+      </div>
+    </div>
+
+    <div class="form-alan">
+      <label class="form-onay">
+        <input asp-for="Aktif">
+        <span>Aktif <span class="soluk">(pasif personel sisteme giriş yapamaz)</span></span>
+      </label>
+      <span asp-validation-for="Aktif" class="alan-hata"></span>
+    </div>
+
+    <div class="form-butonlar">
+      <button type="submit" class="buton buton-birincil"><i class="bi bi-check-lg"></i> Kaydet</button>
+      <a class="buton buton-ikincil" asp-controller="Admin" asp-action="Personeller">Vazgeç</a>
+    </div>
+  </form>
+</section>
+
+@section Scripts {
+  <script src="~/js/admin-form.js" asp-append-version="true"></script>
+}
